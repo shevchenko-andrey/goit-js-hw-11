@@ -15,7 +15,7 @@ const refs = {
 };
 
 refs.searchForm.addEventListener('submit', onSearchInput);
-refs.loadMore.addEventListener('click', onLoadMore);
+refs.loadMore.addEventListener('click', onLoadContent);
 async function onSearchInput(e) {
   e.preventDefault();
   searchServise.resetPage();
@@ -25,16 +25,13 @@ async function onSearchInput(e) {
   if (newQuery === '') {
     return;
   }
-  refs.loadMore.textContent = 'loading...';
-  refs.loadMore.setAttribute('disabled', true);
-  refs.loadMore.classList.remove('is-hidden');
+  onLoadModeBtn();
   const cards = await parceImgCard();
   refs.gallery.insertAdjacentHTML('beforeend', renderImgCards(cards));
   if (!lightbox) {
     lightbox = new SimpleLightbox('.gallery a');
   }
-  refs.loadMore.textContent = 'Load more';
-  refs.loadMore.removeAttribute('disabled');
+  onMainModeBtn();
 }
 function parceImgCard() {
   return searchServise
@@ -58,9 +55,17 @@ function checkHits(res) {
 function resetMurcup() {
   refs.gallery.innerHTML = '';
 }
-async function onLoadMore() {
+async function onLoadContent() {
   const cards = await parceImgCard();
   refs.gallery.insertAdjacentHTML('beforeend', renderImgCards(cards));
   lightbox = new SimpleLightbox('.gallery a');
-  return;
+}
+function onLoadModeBtn() {
+  refs.loadMore.textContent = 'loading...';
+  refs.loadMore.setAttribute('disabled', true);
+  refs.loadMore.classList.remove('is-hidden');
+}
+function onMainModeBtn() {
+  refs.loadMore.textContent = 'Load more';
+  refs.loadMore.removeAttribute('disabled');
 }
